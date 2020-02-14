@@ -9,14 +9,17 @@ namespace Caliburn.Micro
     /// <typeparam name="T">The type that is being conducted.</typeparam>
     public abstract class ConductorBaseWithActiveItem<T> : ConductorBase<T>, IConductActiveItem where T : class
     {
-        private T _activeItem;
+        /// <summary>
+        /// The currently active item.
+        /// </summary>
+        private T _ActiveItem;
 
         /// <summary>
         /// The currently active item.
         /// </summary>
         public T ActiveItem
         {
-            get => _activeItem;
+            get => _ActiveItem;
             set => ActivateItemAsync(value, CancellationToken.None);
         }
 
@@ -33,31 +36,27 @@ namespace Caliburn.Micro
         /// <summary>
         /// Changes the active item.
         /// </summary>
-        /// <param name="newItem">The new item to activate.</param>
-        /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
-        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <param name="Item">The new item to activate.</param>
+        /// <param name="Close">Indicates whether or not to close the previous active item.</param>
+        /// <param name="Token">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual async Task ChangeActiveItemAsync(T newItem, bool closePrevious, CancellationToken cancellationToken)
+        protected virtual async Task ChangeActiveItemAsync(T Item, bool Close, CancellationToken Token = default)
         {
-            await ScreenExtensions.TryDeactivateAsync(_activeItem, closePrevious, cancellationToken);
+            await Extensions
+                .TryDeactivateAsync(_ActiveItem, Close, Token)
+                .ConfigureAwait(false);
 
-            newItem = EnsureItem(newItem);
+            Item = EnsureItem(Item);
 
-            _activeItem = newItem;
-            NotifyOfPropertyChange(nameof(ActiveItem));
+            _ActiveItem = Item;
+            RaiseChange(nameof(ActiveItem));
 
             if (IsActive)
-                await ScreenExtensions.TryActivateAsync(newItem, cancellationToken);
+                await Extensions
+                    .TryActivateAsync(Item, Token)
+                    .ConfigureAwait(false);
 
-            OnActivationProcessed(_activeItem, true);
+            OnActivationProcessed(_ActiveItem, true);
         }
-
-        /// <summary>
-        /// Changes the active item.
-        /// </summary>
-        /// <param name="newItem">The new item to activate.</param>
-        /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        protected Task ChangeActiveItemAsync(T newItem, bool closePrevious) => ChangeActiveItemAsync(newItem, closePrevious, default);
     }
 }
