@@ -11,14 +11,14 @@ namespace Caliburn.Micro
         /// <summary>
         /// Creates an instance of the <see cref="CloseResult{T}"/>
         /// </summary>
-        /// <param name="closeCanOccur">Whether of not a close operation should occur.</param>
-        /// <param name="children">The children of the instance that can be closed.</param>
-        public CloseResult(bool closeCanOccur, IEnumerable<T> children)
+        /// <param name="CloseCanOccur">Whether of not a close operation should occur.</param>
+        /// <param name="Children">The children of the instance that can be closed.</param>
+        public CloseResult(bool CloseCanOccur, IEnumerable<T> Children)
         {
-            CloseCanOccur = closeCanOccur;
-            Children = children;
+            this.CloseCanOccur = CloseCanOccur;
+            this.Children = Children;
         }
-        
+
         /// <summary>
         /// Whether of not a close operation should occur.
         /// </summary>
