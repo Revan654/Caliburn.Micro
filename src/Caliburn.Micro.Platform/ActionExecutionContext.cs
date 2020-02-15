@@ -1,23 +1,15 @@
-﻿namespace Caliburn.Micro
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-#if WINDOWS_UWP
-    using Windows.UI.Xaml;
-#elif XFORMS
-    using global::Xamarin.Forms;
-    using DependencyObject = global::Xamarin.Forms.BindableObject;
-    using DependencyProperty = global::Xamarin.Forms.BindableProperty;
-    using FrameworkElement = global::Xamarin.Forms.VisualElement;
-#else
-    using System.Windows;
-#endif
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Windows;
 
+namespace Caliburn.Micro
+{
     /// <summary>
     /// The context used during the execution of an Action or its guard.
     /// </summary>
-    public class ActionExecutionContext : IDisposable {
+    public class ActionExecutionContext : IDisposable 
+    {
         private WeakReference message;
         private WeakReference source;
         private WeakReference target;
@@ -43,33 +35,37 @@
         /// <summary>
         /// The message being executed.
         /// </summary>
-        public ActionMessage Message {
-            get { return message == null ? null : message.Target as ActionMessage; }
-            set { message = new WeakReference(value); }
+        public ActionMessage Message
+        {
+            get => message?.Target as ActionMessage;
+            set => message = new WeakReference(value);
         }
 
         /// <summary>
         /// The source from which the message originates.
         /// </summary>
-        public FrameworkElement Source {
-            get { return source == null ? null : source.Target as FrameworkElement; }
-            set { source = new WeakReference(value); }
+        public FrameworkElement Source
+        {
+            get => source?.Target as FrameworkElement;
+            set => source = new WeakReference(value);
         }
 
         /// <summary>
         /// The instance on which the action is invoked.
         /// </summary>
-        public object Target {
-            get { return target == null ? null : target.Target; }
-            set { target = new WeakReference(value); }
+        public object Target
+        {
+            get => target?.Target;
+            set => target = new WeakReference(value);
         }
 
         /// <summary>
         /// The view associated with the target.
         /// </summary>
-        public DependencyObject View {
-            get { return view == null ? null : view.Target as DependencyObject; }
-            set { view = new WeakReference(value); }
+        public DependencyObject View
+        {
+            get => view?.Target as DependencyObject;
+            set => view = new WeakReference(value);
         }
 
         /// <summary>
@@ -77,19 +73,25 @@
         /// </summary>
         /// <param name="key">The data key.</param>
         /// <returns>Custom data associated with the context.</returns>
-        public object this[string key] {
-            get {
-                if (values == null)
+        public object this[string key]
+        {
+            get
+            {
+                if (values is null)
+                {
                     values = new Dictionary<string, object>();
+                }
 
-                object result;
-                values.TryGetValue(key, out result);
-
+                values.TryGetValue(key, out var result);
                 return result;
             }
-            set {
-                if (values == null)
+
+            set
+            {
+                if (values is null)
+                {
                     values = new Dictionary<string, object>();
+                }
 
                 values[key] = value;
             }
@@ -98,7 +100,8 @@
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose() {
+        public void Dispose()
+        {
             Disposing(this, System.EventArgs.Empty);
         }
 
